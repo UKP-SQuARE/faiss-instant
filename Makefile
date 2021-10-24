@@ -16,9 +16,10 @@ run:
 
 remove:
 	docker rm -f faiss-instant
+	docker image rm kwang2049/faiss-instant
 
-query_example:
+query:
 	bash query_example.sh
 
-reload_example:
+reload:
 	bash reload_example.sh

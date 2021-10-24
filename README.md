@@ -8,7 +8,7 @@ make download  # This will download example resource files
 ```
 Then, one needs to start the faiss-instant service via docker:
 ```bash
-docker pull kwang2049/faiss-instant  # Or `make pull`
+docker pull kwang2049/faiss-instant  # Or `make pull`; or `make build` to build the docker image
 docker run --detach --rm -it -p 5001:5000 -v resources:/opt/faiss-instant/resources --name faiss-instant kwang2049/faiss-instant  # Or `make run`; notice here a volume mapping will be made from ./resources to /opt/faiss-instant in the container
 ```
 Finally, do the query:
@@ -21,7 +21,7 @@ This will return the mappings from document IDs to the corresponding scores:
 ```
 Whenever update the resources, one needs reload them:
 ```bash
-curl 'localhost:5001/reload' -X GET
+curl 'localhost:5001/reload' -X GET  # Or `make reload`
 ```
 ## Reference
 [plippe/faiss-web-service](https://github.com/plippe/faiss-web-service)
