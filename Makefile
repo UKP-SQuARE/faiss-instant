@@ -8,8 +8,8 @@ release:
 	docker push kwang2049/faiss-instant
 
 download:
-	wget https://public.ukp.informatik.tu-darmstadt.de/kwang/faiss-instant/resources/ids.txt resources/ids.txt
-	wget https://public.ukp.informatik.tu-darmstadt.de/kwang/faiss-instant/resources/pq-384-8b.index resources/pq-384-8b.index
+	wget https://public.ukp.informatik.tu-darmstadt.de/kwang/faiss-instant/resources/ids.txt -P ./resources
+	wget https://public.ukp.informatik.tu-darmstadt.de/kwang/faiss-instant/resources/pq-384-8b.index -P ./resources
 
 run:
 	docker run --detach --rm -it -p 5001:5000 -v resources:/opt/faiss-instant/resources --name faiss-instant kwang2049/faiss-instant

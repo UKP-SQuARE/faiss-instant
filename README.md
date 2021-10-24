@@ -4,7 +4,7 @@ Build a Faiss service instantly. Faiss-instant will simply load **existing** Fai
 ## Usage
 First, one needs to put the resource files (the ID mapping and the Faiss index, please refer to [resources/README.md](resources/README.md)) under the folder [./resources](./resources):
 ```bash
-make download  # This will download example resource files. The example index comes from building a PQ index (384, 8) on a 1M-document version of the MS MARCO corpus (TAS-B model was used for encoding). For more details, please refer to https://github.com/kwang2049/benchmarking-ann.
+make download  # This will download example resource files. The example index comes from building a PQ index (384 chunks, 8-bit clusters) on a 1M-document version of the MS MARCO corpus (TAS-B model was used for encoding). For more details, please refer to https://github.com/kwang2049/benchmarking-ann.
 ```
 Then, one needs to start the faiss-instant service via docker:
 ```bash
