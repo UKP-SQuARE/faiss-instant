@@ -7,7 +7,9 @@ blueprint = Blueprint('faiss_index', __name__)
 
 @blueprint.record_once
 def record(setup_state):
-    blueprint.faiss_index = FaissIndex(setup_state.app.config.get('RESOURCES_PATH'))
+    resources_path = setup_state.app.config.get('RESOURCES_PATH')
+    use_gpu = setup_state.app.config.get('USE_GPU')
+    blueprint.faiss_index = FaissIndex(resources_path, use_gpu)
 
 @blueprint.route('/search', methods=['POST'])
 def search():
@@ -41,7 +43,24 @@ def search():
         print('Server error', e)
         return 'Server error', 500
 
-@blueprint.route('/reload', methods=['GET'])
+@blueprint.route('/reload', methods=['POST'])
 def reload():
-    blueprint.faiss_index.load()
-    return 'Faiss index reloaded\n', 200
+    data = request.get_json()
+    index_name = None
+    use_gpu = False
+    if data is not None:
+        assert 'index_name' in data, "Please specify 'index_name' in the URL arguments."
+        index_name = data['index_name']
+        use_gpu = data.setdefault('use_gpu', False)
+    blueprint.faiss_index.load(index_name, use_gpu)
+    return f'Faiss index ({index_name}) reloaded\n', 200
+
+@blueprint.route('/index_list', methods=['GET'])
+def index_list():
+    index_list = blueprint.faiss_index.parse_index_list()
+    index_loaded = blueprint.faiss_index.index_loaded
+    results = {
+        'index loaded': index_loaded,
+        'index list': index_list
+    }
+    return jsonify(results)

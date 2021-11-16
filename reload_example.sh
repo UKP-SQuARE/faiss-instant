@@ -1,1 +1,1 @@
-curl 'localhost:5001/reload' -X GET
+curl -d '{"index_name":"ivf-32-sq-QT_8bit_uniform"}' -H "Content-Type: application/json" -X POST 'http://localhost:5001/reload'

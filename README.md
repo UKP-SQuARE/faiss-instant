@@ -9,7 +9,7 @@ make download  # This will download example resource files. The example index co
 Then, one needs to start the faiss-instant service via docker:
 ```bash
 docker pull kwang2049/faiss-instant  # Or `make pull`; or `make build` to build the docker image
-docker run --detach --rm -it -p 5001:5000 -v resources:/opt/faiss-instant/resources --name faiss-instant kwang2049/faiss-instant  # Or `make run`; notice here a volume mapping will be made from ./resources to /opt/faiss-instant in the container
+docker run --detach --rm -it -p 5001:5000 -v ${PWD}/resources:/opt/faiss-instant/resources --name faiss-instant kwang2049/faiss-instant  # Or `make run`; notice here a volume mapping will be made from ./resources to /opt/faiss-instant in the container
 ```
 Finally, do the query:
 ```bash
@@ -23,6 +23,37 @@ Whenever update the resources, one needs reload them:
 ```bash
 curl 'localhost:5001/reload' -X GET  # Or `make reload`
 ```
+
+## Advanced -- Multiple Indices
+One can have multiple indices in the resource folder, to load a certain one (actually a pair of `index_name`.index and `index_name`.txt, here the index name is 'ivf-32-sq-QT_8bit_uniform'):
+```bash
+curl -d '{"index_name":"ivf-32-sq-QT_8bit_uniform", "use_gpu":true}' -H "Content-Type: application/json" -X POST 'http://localhost:5001/reload'
+```
+To view the available indices under the resource folder and the index loaded, one can run:
+```bash
+curl -X GET 'http://localhost:5001/index_list'
+```
+To load a specified index:
+```bash
+curl -d '{"index_name":"ivf-32-sq-QT_8bit_uniform"}' -H "Content-Type: application/json" -X POST 'http://localhost:5001/reload'
+```
+
+## Advanced -- Use GPU
+> Note Faiss only supports part of the index types: https://github.com/facebookresearch/faiss/wiki/Faiss-on-the-GPU#implemented-indexes. And for PQ, it cannot support large `m` such as 384.
+
+One can also use GPU to accelerate the search. To achieve that, one needs to use the GPU version:
+```bash
+docker pull kwang2049/faiss-instant-gpu  # The current image supports only CUDA 10.2 or higher version
+```
+And then start the GPU-version container:
+```bash
+docker run --runtime=nvidia --detach --rm -it -p 5001:5000 -v ${PWD}/resources:/opt/faiss-instant/resources --name faiss-instant-gpu kwang2049/faiss-instant-gpu  # Or `make run-gpu`
+```
+This will load the index onto the 0th GPU by default. To load a specified index and make it on GPU, one can run:
+```bash
+curl -d '{"index_name":"ivf-32-sq-QT_8bit_uniform", "use_gpu":true}' -H "Content-Type: application/json" -X POST 'http://localhost:5001/reload'
+```
+
 ## Philosophy
 Faiss-instant provides only the search service and relies on uploaded Faiss indices. By using the volume mapping, the huge pain of uploading index files to the docker service can be directly removed. Consequently, a minimal efficient Faiss system for search is born.
 

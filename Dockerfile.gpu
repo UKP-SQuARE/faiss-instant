@@ -1,0 +1,19 @@
+# CUDA_VERSION: 10.2, 11.0, etc.
+FROM nvidia/cuda:10.2-base
+CMD nvidia-smi
+
+EXPOSE 5000
+
+#set up environment
+RUN apt-get update && apt-get install --no-install-recommends --no-install-suggests -y curl
+RUN apt-get install unzip
+RUN apt-get -y install python3
+RUN apt-get -y install python3-pip
+
+RUN pip3 install --upgrade pip
+RUN pip3 install numpy Flask jsonschema faiss-gpu GPUtil
+
+COPY src /opt/faiss-instant/src
+
+# Cannot use ENTRYPOINT here
+CMD ["python3", "/opt/faiss-instant/src/app.py", "--use_gpu"]
