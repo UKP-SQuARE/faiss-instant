@@ -24,7 +24,8 @@ Whenever update the resources, one needs reload them:
 curl 'localhost:5001/reload' -X GET  # Or `make reload`
 ```
 
-## Advanced -- Multiple Indices
+## Advanced 
+### Multiple Indices
 One can have multiple indices in the resource folder, to load a certain one (actually a pair of `index_name`.index and `index_name`.txt, here the index name is 'ivf-32-sq-QT_8bit_uniform'):
 ```bash
 curl -d '{"index_name":"ivf-32-sq-QT_8bit_uniform", "use_gpu":true}' -H "Content-Type: application/json" -X POST 'http://localhost:5001/reload'
@@ -38,7 +39,7 @@ To load a specified index:
 curl -d '{"index_name":"ivf-32-sq-QT_8bit_uniform"}' -H "Content-Type: application/json" -X POST 'http://localhost:5001/reload'
 ```
 
-## Advanced -- Use GPU
+### Use GPU
 > Note Faiss only supports part of the index types: https://github.com/facebookresearch/faiss/wiki/Faiss-on-the-GPU#implemented-indexes. And for PQ, it cannot support large `m` such as 384.
 
 One can also use GPU to accelerate the search. To achieve that, one needs to use the GPU version:
@@ -53,6 +54,19 @@ This will load the index onto the 0th GPU by default. To load a specified index 
 ```bash
 curl -d '{"index_name":"ivf-32-sq-QT_8bit_uniform", "use_gpu":true}' -H "Content-Type: application/json" -X POST 'http://localhost:5001/reload'
 ```
+
+### Reconstruct
+To get the original vector without indexing by its ID, run:
+```bash
+curl -X 'GET' 'http://localhost:5001/reconstruct?id=1'  # This example returns the vector by its ID='1'
+```
+
+### Explain
+To compute the similarity score between a given query vector and a support vector by its ID:
+```bash
+bash explain_example.sh
+```
+
 
 ## Philosophy
 Faiss-instant provides only the search service and relies on uploaded Faiss indices. By using the volume mapping, the huge pain of uploading index files to the docker service can be directly removed. Consequently, a minimal efficient Faiss system for search is born.

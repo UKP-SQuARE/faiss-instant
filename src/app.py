@@ -13,6 +13,8 @@ if __name__ == "__main__":
     args = cli_arguments()
 
     app = Flask(__name__)
+    app.app_context().push()
+    
     if args.debug:
         app.config['RESOURCES_PATH'] = 'resources'        
         port = 5001
@@ -24,6 +26,6 @@ if __name__ == "__main__":
         app.config['USE_GPU'] = True
     else:
         app.config['USE_GPU'] = False
-
+    
     app.register_blueprint(FaissIndexBlueprint)
     app.run(host='0.0.0.0', port=port, debug=args.debug)

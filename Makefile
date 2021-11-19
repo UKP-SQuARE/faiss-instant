@@ -1,7 +1,9 @@
 build:
+	docker image rm -f kwang2049/faiss-instant
 	docker build -t kwang2049/faiss-instant .
 
 build-gpu:
+	docker image rm -f kwang2049/faiss-instant-gpu
 	docker build -t kwang2049/faiss-instant-gpu -f Dockerfile.gpu .
 
 pull:
@@ -15,14 +17,18 @@ download:
 	wget https://public.ukp.informatik.tu-darmstadt.de/kwang/faiss-instant/dpr-single-nq-base.size-10000/ivf-32-sq-QT_8bit_uniform.index -P ./resources
 
 run:
+	# docker rm -f faiss-instant
 	docker run --detach --rm -it -p 5001:5000 -v ${PWD}/resources:/opt/faiss-instant/resources --name faiss-instant kwang2049/faiss-instant
 
 run-gpu:
+	# docker rm -f faiss-instant-gpu
 	docker run --runtime=nvidia --detach --rm -it -p 5001:5000 -v ${PWD}/resources:/opt/faiss-instant/resources --name faiss-instant-gpu kwang2049/faiss-instant-gpu
 
 remove:
 	docker rm -f faiss-instant
 	docker image rm kwang2049/faiss-instant
+	docker rm -f faiss-instant-gpu
+	docker image rm kwang2049/faiss-instant-gpu
 
 query:
 	bash query_example.sh
@@ -35,3 +41,10 @@ reload-gpu:
 
 index-list:
 	curl -X GET 'http://localhost:5001/index_list'
+
+reconstruct:
+	curl -X 'GET' \
+		'http://localhost:5001/reconstruct?id=1'
+
+explain:
+	bash explain_example.sh
