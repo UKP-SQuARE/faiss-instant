@@ -1,5 +1,11 @@
 # Faiss Instant
-Build a Faiss service instantly. Faiss-instant will simply load **existing** Faiss index (and the corresponding ID mapping) and provide the search service via POST request.
+Build a Faiss service instantly. Faiss-instant will simply load **existing** Faiss index (and the corresponding ID mapping) and provide the search service via POST request. 
+
+**New features:** Now Faiss-Instant also provides the toolkit for encoding texts into embeddings via [SBERT](https://sbert.net/) models and indexing the embeddings into a Faiss ANN index. One just needs to install the toolkit via
+```bash
+pip install faiss-instant
+```
+and try this [example](https://github.com/UKP-SQuARE/faiss-instant/blob/main/examples/beir_scifact/encode_and_index.sh).
 
 ## Usage
 First, one needs to put the resource files (the ID mapping and the Faiss index, please refer to [resources/README.md](resources/README.md)) under the folder [./resources](./resources):
