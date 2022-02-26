@@ -9,6 +9,9 @@ build-gpu:
 pull:
 	docker pull kwang2049/faiss-instant
 
+pull-gpu:
+	docker pull kwang2049/faiss-instant-gpu
+
 release:
 	docker push kwang2049/faiss-instant
 
