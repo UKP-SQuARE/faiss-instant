@@ -109,3 +109,6 @@ ENV/
 output
 
 datasets
+
+run/
+resources/

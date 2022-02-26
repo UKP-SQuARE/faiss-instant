@@ -58,8 +58,12 @@ class FaissIndex(object):
             if type(self.index) == faiss.IndexIVFPQ:
                 assert self.index.pq.code_size in [1, 2, 3, 4, 8, 12, 16, 20, 24, 28, 32, 48, 56, 64, 96], 'For IVFPQ with GPU, the code size is not supported by Faiss. More details: https://github.com/facebookresearch/faiss/wiki/Faiss-on-the-GPU#implemented-indexes.'
             assert len(GPUtil. getAvailable()), 'Cannot get access to GPUs!'
-            res = faiss.StandardGpuResources()  # use a single GPU
-            self.index = faiss.index_cpu_to_gpu(res, 0, self.index)
+
+            co = faiss.GpuMultipleClonerOptions()
+            co.shard = True  # So the index will be split into multiple shards using multple GPUs, which will share the memory burden equally.
+            ngpu = faiss.get_num_gpus()
+            self.logger.info(f'Using {ngpu} GPU(s)')
+            self.index = faiss.index_cpu_to_all_gpus(self.index, co=co, ngpu=ngpu) 
 
         self.pos2id = []
         self.id2pos = {}
@@ -70,6 +74,7 @@ class FaissIndex(object):
                 self.id2pos[_id] = pos
         
         self.index_loaded = index_name
+        self.logger.info(f'Index {self.index_loaded} loaded')
         
     def search(self, qvecs, k):
         """

@@ -54,9 +54,9 @@ docker pull kwang2049/faiss-instant-gpu  # The current image supports only CUDA 
 ```
 And then start the GPU-version container:
 ```bash
-docker run --runtime=nvidia --detach --rm -it -p 5001:5000 -v ${PWD}/resources:/opt/faiss-instant/resources --name faiss-instant-gpu kwang2049/faiss-instant-gpu  # Or `make run-gpu`
+docker run --runtime=nvidia -e CUDA_VISIBLE_DEVICES=0 --detach --rm -it -p 5001:5000 -v ${PWD}/resources:/opt/faiss-instant/resources --name faiss-instant-gpu kwang2049/faiss-instant-gpu  # Or `make run-gpu`
 ```
-This will load the index onto the 0th GPU by default. To load a specified index and make it on GPU, one can run:
+This will split and load the index onto all the GPUs available (in this example it uses only `gpu:0`). To load a specified index and make it on GPU, one can run:
 ```bash
 curl -d '{"index_name":"ivf-32-sq-QT_8bit_uniform", "use_gpu":true}' -H "Content-Type: application/json" -X POST 'http://localhost:5001/reload'
 ```

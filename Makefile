@@ -12,6 +12,9 @@ pull:
 release:
 	docker push kwang2049/faiss-instant
 
+release-gpu:
+	docker push kwang2049/faiss-instant-gpu
+
 download:
 	wget https://public.ukp.informatik.tu-darmstadt.de/kwang/faiss-instant/dpr-single-nq-base.size-10000/ivf-32-sq-QT_8bit_uniform.txt -P ./resources
 	wget https://public.ukp.informatik.tu-darmstadt.de/kwang/faiss-instant/dpr-single-nq-base.size-10000/ivf-32-sq-QT_8bit_uniform.index -P ./resources
@@ -22,7 +25,7 @@ run:
 
 run-gpu:
 	# docker rm -f faiss-instant-gpu
-	docker run --runtime=nvidia --detach --rm -it -p 5001:5000 -v ${PWD}/resources:/opt/faiss-instant/resources --name faiss-instant-gpu kwang2049/faiss-instant-gpu
+	docker run --runtime=nvidia -e CUDA_VISIBLE_DEVICES=0 --detach --rm -it -p 5001:5000 -v ${PWD}/resources:/opt/faiss-instant/resources --name faiss-instant-gpu kwang2049/faiss-instant-gpu
 
 remove:
 	docker rm -f faiss-instant
