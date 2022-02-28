@@ -31,7 +31,8 @@ docker pull kwang2049/faiss-instant  # Or `make pull`; or `make build` to build 
 docker run --detach --rm -it -p 5001:5000 -v $resources:/opt/faiss-instant/resources --name faiss-instant kwang2049/faiss-instant  # Or `make run`; notice here a volume mapping will be made from ./resources to /opt/faiss-instant in the container
 
 # Run the evaluation
-python run.py --official_tokenization
+python run.py --official_tokenization --batch_size 1 --device cpu  # Need about 20 minutes
+# python run.py --official_tokenization --batch_size 64 --device cuda  # Need about 2 minutes
 
 
 # Results:

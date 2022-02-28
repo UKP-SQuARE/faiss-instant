@@ -4,6 +4,8 @@ from email.policy import default
 import json
 import os
 import sys
+from time import sleep
+from urllib import request
 import numpy as np
 import torch
 from tqdm import tqdm
@@ -25,6 +27,20 @@ args = parser.parse_args()
 bsz = args.batch_size
 use_title = args.title
 device = args.device
+
+ntries = 1000
+faiss_container_working = False
+for _ in range(ntries):
+    try:
+        response = requests.get('http://localhost:5001/index_list')
+        if response.status_code == 200:
+            faiss_container_working = True
+            break
+    except:
+        pass
+    sleep(1)
+
+assert faiss_container_working, "Cannot reach the Faiss-instant container service!"
 
 
 # 0. Loading test questions and answers
