@@ -5,7 +5,7 @@ Build a Faiss service instantly. Faiss-instant will simply load **existing** Fai
 ```bash
 pip install faiss-instant
 ```
-and try this [example](https://github.com/UKP-SQuARE/faiss-instant/blob/main/examples/beir_scifact/encode_and_index.sh).
+and try this [example](https://github.com/UKP-SQuARE/faiss-instant/blob/main/examples/encode_and_index/beir_scifact/encode_and_index.sh).
 
 ## Usage
 First, one needs to put the resource files (the ID mapping and the Faiss index, please refer to [resources/README.md](resources/README.md)) under the folder [./resources](./resources):
