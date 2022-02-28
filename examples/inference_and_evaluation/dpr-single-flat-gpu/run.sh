@@ -17,14 +17,17 @@ python -m dpr.data.download_data --resource data.retriever.qas.nq-test
 python -m dpr.data.download_data --resource data.wikipedia_split.psgs_w100
 
 # Downloading pre-computed index
-python -m DPR.dpr.data.download_data --resource indexes.single.nq.full.index_meta
-python -m DPR.dpr.data.download_data --resource indexes.single.nq.full.index
-mv downloads/indexes/single/nq/full/index_meta.dpr downloads/indexes/single/nq/full/flat.txt  # change the file names so that faiss-instant can recognize them
-mv downloads/indexes/single/nq/full/index.dpr downloads/indexes/single/nq/full/flat.index
+if [ ! -d "index" ]; then
+    mkdir index
+    cd index
+    wget https://public.ukp.informatik.tu-darmstadt.de/kwang/faiss-instant/dpr-single-nq-base.size-full/nq-flat.txt
+    wget https://public.ukp.informatik.tu-darmstadt.de/kwang/faiss-instant/dpr-single-nq-base.size-full/nq-flat.index
+    cd ..
+fi
 
 
 # Starting Faiss-instant with the index
-export resources="${PWD}/downloads/indexes/single/nq/full/"
+export resources="${PWD}/index"
 docker pull kwang2049/faiss-instant-gpu
 docker run --runtime=nvidia --detach --rm -it -p 5001:5000 -v $resources:/opt/faiss-instant/resources --name faiss-instant-gpu kwang2049/faiss-instant-gpu  # Or `make run-gpu`
 # docker run --runtime=nvidia --detach -e CUDA_VISIBLE_DEVICES=0,1,2 --rm -it -p 5001:5000 -v $resources:/opt/faiss-instant/resources --name faiss-instant-gpu kwang2049/faiss-instant-gpu  # Or `make run-gpu`

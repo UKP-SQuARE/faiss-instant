@@ -112,3 +112,8 @@ datasets
 
 run/
 resources/
+
+metrics*.json
+qrels*.json
+retrieval_results*.json
+index

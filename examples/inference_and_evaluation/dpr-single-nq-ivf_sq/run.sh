@@ -17,15 +17,16 @@ python -m dpr.data.download_data --resource data.retriever.qas.nq-test
 python -m dpr.data.download_data --resource data.wikipedia_split.psgs_w100
 
 # Downloading pre-computed index
-mkdir dpr-single-nq-ivf_sq-index
-cd dpr-single-nq-ivf_sq-index
-wget https://public.ukp.informatik.tu-darmstadt.de/kwang/faiss-instant/dpr-single-nq-base.size-full/nq-QT_8bit_uniform-ivf262144.index
-wget https://public.ukp.informatik.tu-darmstadt.de/kwang/faiss-instant/dpr-single-nq-base.size-full/nq-QT_8bit_uniform-ivf262144.txt
-cd ..
-
+if [ ! -d "index" ]; then
+    mkdir index
+    cd index
+    wget https://public.ukp.informatik.tu-darmstadt.de/kwang/faiss-instant/dpr-single-nq-base.size-full/nq-QT_8bit_uniform-ivf262144.index
+    wget https://public.ukp.informatik.tu-darmstadt.de/kwang/faiss-instant/dpr-single-nq-base.size-full/nq-QT_8bit_uniform-ivf262144.txt
+    cd ..
+fi
 
 # Starting Faiss-instant with the index
-export resources="$PWD/dpr-single-nq-ivf_sq-index"
+export resources="$PWD/index"
 docker pull kwang2049/faiss-instant  # Or `make pull`; or `make build` to build the docker image
 docker run --detach --rm -it -p 5001:5000 -v $resources:/opt/faiss-instant/resources --name faiss-instant kwang2049/faiss-instant  # Or `make run`; notice here a volume mapping will be made from ./resources to /opt/faiss-instant in the container
 

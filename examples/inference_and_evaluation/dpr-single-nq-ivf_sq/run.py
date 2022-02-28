@@ -9,8 +9,8 @@ import torch
 from tqdm import tqdm
 from transformers import DPRQuestionEncoder, DPRQuestionEncoderTokenizer
 import requests
-from DPR.dpr.data.qa_validation import has_answer
-from DPR.dpr.utils.tokenizers import SimpleTokenizer
+from dpr.data.qa_validation import has_answer
+from dpr.utils.tokenizers import SimpleTokenizer
 from beir.retrieval.evaluation import EvaluateRetrieval
 import argparse
 
