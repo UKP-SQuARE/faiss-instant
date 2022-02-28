@@ -1,7 +1,7 @@
 # Faiss Instant
 Build a Faiss service instantly. Faiss-instant will simply load **existing** Faiss index (and the corresponding ID mapping) and provide the search service via POST request. 
 
-**New features:** Now Faiss-Instant also provides the toolkit for encoding texts into embeddings via [SBERT](https://sbert.net/) models and indexing the embeddings into a Faiss ANN index. One just needs to install the toolkit via
+**New features:** Now Faiss-instant also provides the toolkit for encoding texts into embeddings via [SBERT](https://sbert.net/) models and indexing the embeddings into a Faiss ANN index. One just needs to install the toolkit via
 ```bash
 pip install faiss-instant
 ```
