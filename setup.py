@@ -6,7 +6,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
 
 setup(
     name="faiss-instant",
-    version="0.0.3",
+    version="0.0.4",
     author="Kexin Wang",
     author_email="kexin.wang.2049@gmail.com",
     description="This package contains toolkit for faiss-instant. It mainly helps to encode texts via Transformers and build Faiss indexes in an automatic way.",

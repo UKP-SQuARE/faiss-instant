@@ -106,6 +106,8 @@ def run(input_file, output_dir, model_type, model_name_or_path, normalize=False,
     dataloader.collate_fn = partial(smart_batching_collate, model)
     if ngpus > 1:
         model = DataParallel(model).cuda()
+    elif ngpus == 1:
+        model = model.cuda()
 
     chunk = []
     current_chunk_size = 0
