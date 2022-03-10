@@ -6,7 +6,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
 
 setup(
     name="faiss-instant",
-    version="0.0.1",
+    version="0.0.2",
     author="Kexin Wang",
     author_email="kexin.wang.2049@gmail.com",
     description="This package contains toolkit for faiss-instant. It mainly helps to encode texts via Transformers and build Faiss indexes in an automatic way.",
@@ -16,7 +16,7 @@ setup(
     project_urls={
         "Bug Tracker": "https://github.com/UKP-SQuARE/faiss-instant/issues",
     },
-    packages=find_packages('faiss_instant'),
+    packages=['faiss_instant'],
     classifiers=[
         "Programming Language :: Python :: 3",
         "License :: OSI Approved :: Apache Software License",

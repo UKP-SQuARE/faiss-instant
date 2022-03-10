@@ -58,13 +58,15 @@ def auto_ivf_sq(nembeddings):
     print(f"Automatic index factory string: {index_factory_string}")
     return index_factory_string 
 
-def run(embeddings_dir, output_dir, index_factory_string=None, distance='IP', nprobe=None):
+def run(embeddings_dir, output_dir, index_factory_string=None, distance='IP', nprobe=None, use_gpu=False):
     os.makedirs(output_dir, exist_ok=True)
     output_path = os.path.join(output_dir, 'ann.index')
     if not os.path.exists(output_path):
-        using_gpu = torch.cuda.is_available()
+        use_gpu = use_gpu and torch.cuda.is_available()
         embeddings = load_embeddings(embeddings_dir)
         ndim = embeddings.shape[1]
+        if len(embeddings) > 1e7:
+            print('WARNING: #embeddings > 10M, please use GPU(s) for saving time!!!')
 
         if index_factory_string is None:
             index_factory_string = auto_ivf_sq(len(embeddings))
@@ -76,14 +78,16 @@ def run(embeddings_dir, output_dir, index_factory_string=None, distance='IP', np
             raise NotImplementedError
         index = faiss.index_factory(ndim, index_factory_string, distance)
         
-        if using_gpu:
+        if use_gpu:
             ngpus = faiss.get_num_gpus()
             print(f'Using {ngpus} gpus')
             index = faiss.index_cpu_to_all_gpus(index)
+        else:
+            print('Using cpu')
         
         index.train(embeddings)
         index.add(embeddings)
-        if using_gpu:
+        if use_gpu:
             index = faiss.index_gpu_to_cpu(index)
 
         if nprobe is None and index.nlist:
@@ -105,5 +109,6 @@ if __name__ == '__main__':
     parser.add_argument('--index_factory_string', default=None, help='By default, it will use IVFSQ index')
     parser.add_argument('--distance', default='IP', choices=['L2', 'IP'])
     parser.add_argument('--nprobe', type=int, default=None, help='How many clusters you want to dive in for each search. By default it will be 2e-3 * nlist')
+    parser.add_argument('--use_gpu', action='store_true', help='Please use GPU(s) if #embeddings >= 10M')
     args = parser.parse_args()
     run(**vars(args))

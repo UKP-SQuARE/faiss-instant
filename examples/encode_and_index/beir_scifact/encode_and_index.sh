@@ -1,4 +1,5 @@
-export CUDA_VISIBLE_DEVICES=5,6
+export CUDA_VISIBLE_DEVICES=0  # Change this if you have multiple GPUs
+# export CUDA_VISIBLE_DEVICES=5,6
 
 if [ ! -d "datasets/beir/scifact" ]; then
     mkdir -p datasets/beir

@@ -91,16 +91,21 @@ def smart_batching_collate(self, batch):
     return sentence_features, ids
 
 def run(input_file, output_dir, model_type, model_name_or_path, normalize=False, chunk_size=160000, batch_size_per_gpu=32):
-    assert torch.cuda.is_available()
     ngpus = torch.cuda.device_count()
-    batch_size = ngpus * batch_size_per_gpu
+    if ngpus:
+        print(f'Using {ngpus} GPU(s)')
+        batch_size = ngpus * batch_size_per_gpu
+    else:
+        print(f'WARNING: Using cpu. It is going to be slow')
+        batch_size = batch_size_per_gpu
 
     dataset = JSONLDataSet(input_file)
     dataloader = DataLoader(dataset, batch_size, shuffle=False, num_workers=ngpus)
     
     model: SentenceTransformer = build_model(model_type, model_name_or_path)
     dataloader.collate_fn = partial(smart_batching_collate, model)
-    model = DataParallel(model).cuda()
+    if ngpus > 1:
+        model = DataParallel(model).cuda()
 
     chunk = []
     current_chunk_size = 0
@@ -142,7 +147,7 @@ if __name__ == '__main__':
     parser.add_argument('--model_name_or_path')
     parser.add_argument('--normalize', action='store_true', help='Set this flag if cosine-similarity will be used')
     parser.add_argument('--chunk_size', type=int, default=160000)
-    parser.add_argument('--batch_size_per_gpu', type=int, default=32)
+    parser.add_argument('--batch_size_per_gpu', type=int, default=32, help='Batch size per GPU device. If no GPU, it is for the total CPU batch size')
     args = parser.parse_args()
     run(**vars(args))
 
