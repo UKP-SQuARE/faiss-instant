@@ -23,7 +23,7 @@ bash query_example.sh  # curl 'localhost:5001/search' -X POST -d '{"k": 5, "vect
 ```
 This will return the mappings from document IDs to the corresponding scores:
 ```json
-[{"2426246":106.54305267333984,"4944584":107.05268096923828,"6195536":106.5833511352539,"6398884":107.19760131835938,"8077664":107.86164093017578}]
+[{"6557":74.6728515625,"6559":74.35382080078125,"6566":75.39551544189453,"6573":76.5738525390625,"6575":75.47660827636719}]
 ```
 Whenever update the resources, one needs reload them:
 ```bash
